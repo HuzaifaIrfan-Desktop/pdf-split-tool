@@ -196,3 +196,4 @@ cython_debug/
 input/
 output/
 *.pdf
+*.exe

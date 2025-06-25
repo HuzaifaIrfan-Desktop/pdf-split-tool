@@ -3,10 +3,11 @@ from pdf_tools import split_pdf_by_size
 def main():
     print("Hello from pdf-split-tool!")
     
-    input_dir = "input"
-    filename="Arabic for Young Learners - Pupil Book 1.pdf"
+    filepath = "input/Arabic for Young Learners - Pupil Book 1.pdf"
+    
+    filename= filepath.split('/')[-1]
     filename_without_extension = filename.split('.')[0]
-    filepath = f"{input_dir}/{filename}"
+    
     print(f"Splitting PDF: {filepath}")
     
     output_dir=f"output/{filename_without_extension}"
