@@ -1,4 +1,5 @@
 from pdf_tools import split_pdf_by_size
+from pathlib import Path
 
 import sys
 from PyQt6.QtWidgets import (
@@ -60,13 +61,13 @@ class FileProcessorApp(QWidget):
         else:
             self.label.setText("Please select a file first.")
 
-    def process_file(self, path, file_size_limit_mb=5):
+    def process_file(self, filepath, file_size_limit_mb=5):
             
         # filepath = "input/Arabic for Young Learners - Pupil Book 1.pdf"
-        filepath = path
-        
-        filename= filepath.split('/')[-1]
-        filename_without_extension = filename.split('.')[0]
+        path = Path(filepath)
+        filename = path.name # e.g., "file.pdf"
+        extension = path.suffix  # e.g., ".pdf"
+        filename_without_extension = path.stem  # e.g., "file"
         
         print(f"Splitting PDF: {filepath}")
         
