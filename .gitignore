@@ -197,3 +197,5 @@ input/
 output/
 *.pdf
 *.exe
+
+!pdf-split-tool.spec
