@@ -3,7 +3,8 @@ from pdf_tools import split_pdf_by_size
 import sys
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout,
-    QPushButton, QLabel, QFileDialog
+    QPushButton, QLabel, QFileDialog,
+    QSpinBox, QHBoxLayout
 )
 
 class FileProcessorApp(QWidget):
@@ -18,9 +19,19 @@ class FileProcessorApp(QWidget):
         self.layout.addWidget(self.label)
 
         # Button to select file
-        self.select_button = QPushButton("Select File")
+        self.select_button = QPushButton("Select PDF File")
         self.select_button.clicked.connect(self.select_file)
         self.layout.addWidget(self.select_button)
+        
+        # File size limit input
+        self.size_layout = QHBoxLayout()
+        self.size_label = QLabel("PDF Part Size limit (MB):")
+        self.size_input = QSpinBox()
+        self.size_input.setRange(1, 10000)  # 1MB to 10GB
+        self.size_input.setValue(5)  # default value
+        self.size_layout.addWidget(self.size_label)
+        self.size_layout.addWidget(self.size_input)
+        self.layout.addLayout(self.size_layout)
 
         # Button to run processing function
         self.run_button = QPushButton("Split PDF")
@@ -32,7 +43,7 @@ class FileProcessorApp(QWidget):
 
     def select_file(self):
         file_dialog = QFileDialog()
-        path, _ = file_dialog.getOpenFileName(self, "Open File")
+        path, _ = file_dialog.getOpenFileName(self,  "Select PDF file", "",  "PDF File (*.pdf)")
         if path:
             self.file_path = path
             self.label.setText(f"Selected: {path}")
@@ -41,16 +52,15 @@ class FileProcessorApp(QWidget):
 
     def run_function(self):
         if self.file_path:
-            result = self.process_file(self.file_path)
+                    # Get value from the spin box
+            file_size_limit_mb = self.size_input.value()
+            
+            result = self.process_file(self.file_path, file_size_limit_mb)
             self.label.setText(f"Processed: {result}")
         else:
             self.label.setText("Please select a file first.")
 
     def process_file(self, path, file_size_limit_mb=5):
-        # Replace this with your actual function logic
-        # with open(path, "r", encoding="utf-8", errors="ignore") as f:
-        #     return f"Length: {len(f.read())} chars"
-        
             
         # filepath = "input/Arabic for Young Learners - Pupil Book 1.pdf"
         filepath = path
@@ -64,7 +74,8 @@ class FileProcessorApp(QWidget):
         output_filename_prefix = filename_without_extension + "_"
         # Example usage:
         split_pdf_by_size(filepath, file_size_limit_mb, output_filename_prefix , output_dir)  # Split into ~5MB chunks
-
+        print(f"PDF split into chunks in {output_dir}")
+        
         return f"PDF split into chunks in {output_dir}"
 
 def main():
