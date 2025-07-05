@@ -4,7 +4,7 @@ import os
 
 
 
-def split_pdf_by_size(input_pdf, max_size_mb, output_filename_prefix="part_", output_dir="output"):
+def split_pdf_by_size(input_pdf, max_size_mb, output_filename_prefix="part_", output_dir="output", progress_callback= lambda message : print(message)):
     reader = PdfReader(input_pdf)
     total_pages = len(reader.pages)
     max_size_bytes = max_size_mb * 1024 * 1024
@@ -44,7 +44,7 @@ def split_pdf_by_size(input_pdf, max_size_mb, output_filename_prefix="part_", ou
             writer.write(f)
 
         actual_size_mb = os.path.getsize(part_path) / (1024 * 1024)
-        print(f"    Created: ({actual_size_mb:.2f} MB, pages {start_page+1} to {end_page - 1 + 1}) {part_path}")
+        progress_callback(f"    Created: ({actual_size_mb:.2f} MB, pages {start_page+1} to {end_page - 1 + 1}) {part_path}")
 
         start_page = end_page
         part += 1
