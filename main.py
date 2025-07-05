@@ -1,7 +1,9 @@
 from pdf_tools import split_pdf_by_size
-from pathlib import Path
 
+from pathlib import Path            
+import os
 import sys
+
 from PyQt6.QtWidgets import QApplication, QFileDialog
 from PyQt6.QtQml import QQmlApplicationEngine
 from PyQt6.QtCore import QObject, pyqtSignal, pyqtSlot, QThread
@@ -83,8 +85,6 @@ class Backend(QObject):
         self.thread.started.connect(self.worker.run)
         self.thread.start()   
 
-            
-
 
 def main():
     print("Hello from pdf-split-tool!")
@@ -95,7 +95,14 @@ def main():
     backend = Backend()
     engine.rootContext().setContextProperty("backend", backend)  # Expose to QML
 
-    engine.load("ui.qml")
+
+    # Detect if we're in a PyInstaller bundle
+    if getattr(sys, 'frozen', False):
+        qml_path = os.path.join(sys._MEIPASS, 'ui.qml')
+    else:
+        qml_path = os.path.join(os.path.dirname(__file__), 'ui.qml')
+        
+    engine.load(qml_path)
 
     if not engine.rootObjects():
         sys.exit(-1)
