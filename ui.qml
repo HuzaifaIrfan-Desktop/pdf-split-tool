@@ -95,6 +95,7 @@ ApplicationWindow {
 
         function onMessage(msg) {
             consoleBox.text += msg + "\n"
+            console.log( msg)
         }
     }
 }
